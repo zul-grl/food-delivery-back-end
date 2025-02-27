@@ -1,0 +1,13 @@
+import cors from "cors";
+import express from "express";
+import bodyParser from "body-parser";
+import { configDotenv } from "dotenv";
+import { connectMongodb } from "./database/db";
+import { categoryRoute } from "./routes/food-category.route";
+const app = express();
+const port = 4000;
+app.use(bodyParser.json());
+configDotenv();
+connectMongodb();
+app.use("/food-category", categoryRoute);
+app.listen(port);

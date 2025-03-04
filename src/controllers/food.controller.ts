@@ -1,44 +1,46 @@
 import { Request, Response } from "express";
 import FoodModel from "../models/food.model";
 
-export const createFood = async (req: Request, res: Response) => {
+export const getFoodById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const foodData = req.body;
-    const newFood = await FoodModel.create(foodData);
-    res.status(200).json({ message: "Food created", newFood });
+    const { foodId } = req.params;
+    const food = await FoodModel.findById(foodId).populate("category");
+    if (!food) res.status(404).json({ message: "Food not found" });
+    res.status(200).json({ message: "Food found", food });
+    return;
   } catch (error) {
-    res.status(500).json({ message: "Error in createFood", error });
+    res.status(500).json({ message: "Error in getFoodById", error });
   }
 };
 
-export const getFoods = async (req: Request, res: Response) => {
+export const updateFood = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const allFoods = await FoodModel.find().populate("category");
-    res.status(200).json({ message: "All foods", allFoods });
+    const { foodId } = req.params;
+    const updatedFood = await FoodModel.findByIdAndUpdate(foodId, req.body, {
+      new: true,
+    });
+    if (!updatedFood) {
+      res.status(404).json({ message: "Food not found" });
+      return;
+    }
+    res.status(200).json({ message: "Food updated", updatedFood });
   } catch (error) {
-    res.status(500).json({ message: "Error in getFoods", error });
+    res.status(500).json({ message: "Error in updateFood", error });
   }
 };
 
 export const deleteFood = async (req: Request, res: Response) => {
   try {
-    const { _id } = req.body;
-    await FoodModel.deleteOne({ _id: _id });
-    res.status(200).json({ message: "Deleted food" });
+    const { foodId } = req.params;
+    await FoodModel.findByIdAndDelete(foodId);
+    res.status(200).json({ message: "Food deleted" });
   } catch (error) {
     res.status(500).json({ message: "Error in deleteFood", error });
-  }
-};
-
-export const updateFood = async (req: Request, res: Response) => {
-  try {
-    const { _id, foodName, category, price, image, ingredients } = req.body;
-    const updatedFood = await FoodModel.updateOne(
-      { _id: _id },
-      { foodName, category, price, image, ingredients }
-    );
-    res.status(200).json({ message: "Updated food", updatedFood });
-  } catch (error) {
-    res.status(500).json({ message: "Error in updateFood", error });
   }
 };

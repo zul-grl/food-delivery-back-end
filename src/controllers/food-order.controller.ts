@@ -3,9 +3,8 @@ import FoodOrderModel from "../models/food-order.model";
 
 export const createFoodOrder = async (req: Request, res: Response) => {
   try {
-    const orderData = req.body;
-    const newOrder = await FoodOrderModel.create(orderData);
-    res.status(200).json({ message: "Order created", newOrder });
+    const newOrder = await FoodOrderModel.create(req.body);
+    res.status(201).json({ message: "Order created", newOrder });
   } catch (error) {
     res.status(500).json({ message: "Error in createFoodOrder", error });
   }
@@ -13,33 +12,43 @@ export const createFoodOrder = async (req: Request, res: Response) => {
 
 export const getFoodOrders = async (req: Request, res: Response) => {
   try {
-    const allOrders = await FoodOrderModel.find()
+    const orders = await FoodOrderModel.find()
       .populate("user")
       .populate("foodOrderItems");
-    res.status(200).json({ message: "All orders", allOrders });
+    res.status(200).json({ message: "All orders", orders });
   } catch (error) {
     res.status(500).json({ message: "Error in getFoodOrders", error });
   }
 };
 
-export const deleteFoodOrder = async (req: Request, res: Response) => {
+export const getFoodOrdersByUser = async (req: Request, res: Response) => {
   try {
-    const { _id } = req.body;
-    await FoodOrderModel.deleteOne({ _id: _id });
-    res.status(200).json({ message: "Deleted order" });
+    const { userId } = req.params;
+    const orders = await FoodOrderModel.find({ user: userId }).populate(
+      "foodOrderItems"
+    );
+    res.status(200).json({ message: "User orders", orders });
   } catch (error) {
-    res.status(500).json({ message: "Error in deleteFoodOrder", error });
+    res.status(500).json({ message: "Error in getFoodOrdersByUser", error });
   }
 };
 
-export const updateFoodOrder = async (req: Request, res: Response) => {
+export const updateFoodOrder = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const { _id, user, totalPrice, status, foodOrderItems } = req.body;
-    const updatedOrder = await FoodOrderModel.updateOne(
-      { _id: _id },
-      { user, totalPrice, status, foodOrderItems }
+    const { foodOrderId } = req.params;
+    const updatedOrder = await FoodOrderModel.findByIdAndUpdate(
+      foodOrderId,
+      req.body,
+      { new: true }
     );
-    res.status(200).json({ message: "Updated order", updatedOrder });
+    if (!updatedOrder) {
+      res.status(404).json({ message: "Order not found" });
+      return;
+    }
+    res.status(200).json({ message: "Order updated", updatedOrder });
   } catch (error) {
     res.status(500).json({ message: "Error in updateFoodOrder", error });
   }

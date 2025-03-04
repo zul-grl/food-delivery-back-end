@@ -1,43 +1,51 @@
 import { Request, Response } from "express";
-import foodCategoryModel from "../models/food-category.model";
+import FoodCategoryModel from "../models/food-category.model";
+
+export const getFoodCategories = async (req: Request, res: Response) => {
+  try {
+    const categories = await FoodCategoryModel.find();
+    res.status(200).json({ message: "All categories", categories });
+  } catch (error) {
+    res.status(500).json({ message: "Error in getFoodCategories", error });
+  }
+};
 
 export const createFoodCategory = async (req: Request, res: Response) => {
   try {
-    const categoryData = req.body;
-    const newCategoty = await foodCategoryModel.create(categoryData);
-    res.status(200).json({ message: "Category created", newCategoty });
+    const newCategory = await FoodCategoryModel.create(req.body);
+    res.status(201).json({ message: "Category created", newCategory });
   } catch (error) {
     res.status(500).json({ message: "Error in createFoodCategory", error });
   }
 };
-export const getoodCategories = async (req: Request, res: Response) => {
+
+export const updateFoodCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const allCategoty = await foodCategoryModel.find();
-    res.status(200).json({ message: "All category", allCategoty });
-  } catch (error) {
-    res.status(500).json({ message: "Error in allCategoty", error });
-  }
-};
-export const deleteCategory = async (req: Request, res: Response) => {
-  try {
-    const { _id } = req.body;
-    await foodCategoryModel.deleteOne({ _id: _id });
-    res.status(200).json({ message: "Deleted category" });
-  } catch (error) {
-    res.status(500).json({ message: "Error in deleteCategory", error });
-  }
-};
-export const updateCategory = async (req: Request, res: Response) => {
-  try {
-    const { _id, categoryName } = req.body;
-    console.log("REQUEST BODY DATA", _id, categoryName);
-    const updatedCategory = await foodCategoryModel.updateOne(
-      { _id: _id },
-      { categoryName: categoryName }
+    const { foodCategoryId } = req.params;
+    const updatedCategory = await FoodCategoryModel.findByIdAndUpdate(
+      foodCategoryId,
+      req.body,
+      { new: true }
     );
-    res.status(200).json({ message: "Updated category", updatedCategory });
+    if (!updatedCategory) {
+      res.status(404).json({ message: "Category not found" });
+      return;
+    }
+    res.status(200).json({ message: "Category updated", updatedCategory });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error in updateCategory", error });
+    res.status(500).json({ message: "Error in updateFoodCategory", error });
+  }
+};
+
+export const deleteFoodCategory = async (req: Request, res: Response) => {
+  try {
+    const { foodCategoryId } = req.params;
+    await FoodCategoryModel.findByIdAndDelete(foodCategoryId);
+    res.status(200).json({ message: "Category deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Error in deleteFoodCategory", error });
   }
 };

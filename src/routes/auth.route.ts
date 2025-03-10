@@ -2,7 +2,7 @@ import { Router } from "express";
 
 const authRoute = Router();
 
-// authRoute
+authRoute;
 //   .post("/sign-up", signUp)
 //   .post("/sign-in", signIn)
 //   .get("/refresh", refreshToken)

@@ -11,7 +11,7 @@ import { userRoute } from "./routes/user.route";
 
 const app = express();
 const port = 4000;
-
+app.use(cors({ origin: "http://localhost:3000" }));
 app.use(bodyParser.json());
 configDotenv();
 connectMongodb();

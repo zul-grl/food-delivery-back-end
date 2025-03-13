@@ -18,7 +18,6 @@ export const createFoodCategory = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error in createFoodCategory", error });
   }
 };
-
 export const updateFoodCategory = async (
   req: Request,
   res: Response
@@ -27,7 +26,7 @@ export const updateFoodCategory = async (
     const { foodCategoryId } = req.params;
     const updatedCategory = await FoodCategoryModel.findByIdAndUpdate(
       foodCategoryId,
-      req.body,
+      { categoryName: req.body.categoryName },
       { new: true }
     );
     if (!updatedCategory) {
@@ -39,7 +38,6 @@ export const updateFoodCategory = async (
     res.status(500).json({ message: "Error in updateFoodCategory", error });
   }
 };
-
 export const deleteFoodCategory = async (req: Request, res: Response) => {
   try {
     const { foodCategoryId } = req.params;

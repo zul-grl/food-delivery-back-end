@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 type FoodSchemaType = {
   foodName: string;
   category: mongoose.Types.ObjectId;
-  price: number;
+  price: string;
   image: string;
   ingredients: string;
   createdAt: Date;
@@ -18,7 +18,7 @@ const FoodSchema: Schema = new Schema(
       ref: "FoodCategory",
       required: true,
     },
-    price: { type: Number, required: true },
+    price: { type: String, required: true },
     image: { type: String, required: true },
     ingredients: { type: String, required: true },
   },

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../../models/user.model";
-import { compare, compareSync } from "bcryptjs";
+import { compareSync } from "bcryptjs";
 
 export const signIn = async (req: Request, res: Response): Promise<void> => {
   try {

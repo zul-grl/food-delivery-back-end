@@ -2,9 +2,9 @@ import { Router } from "express";
 import {
   resetPassword,
   resetPasswordRequest,
-  signIn,
-  signUp,
 } from "../controllers/auth.controller";
+import { signUp } from "../controllers/auth/signUp.controller";
+import { signIn } from "../controllers/auth/signIn.controller";
 
 const authRoute = Router();
 

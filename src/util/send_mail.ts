@@ -19,7 +19,7 @@ export const sendEmail = async (email: string, token: string) => {
     subject: "Reset your password",
     html: `
         <h1>Your password reset link</h1>
-       <a href="https://food-delivery-roan-mu.vercel.app/auth/change-password?id=${token}">click here</a>
+       <a href="https://food-delivery-back-end-0cz4.onrender.com/auth/change-password?id=${token}">click here</a>
     `,
   };
   await transporter.sendMail(mailOption);

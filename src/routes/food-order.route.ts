@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createFoodOrder,
+  deleteFoodOrder,
   getFoodOrders,
   getFoodOrdersByUser,
   updateFoodOrder,
@@ -12,6 +13,7 @@ foodOrderRoute
   .post("/", createFoodOrder)
   .get("/", getFoodOrders)
   .get("/:userId", getFoodOrdersByUser)
+  .delete("/", deleteFoodOrder)
   .patch("/:foodOrderId", updateFoodOrder);
 
 export { foodOrderRoute };

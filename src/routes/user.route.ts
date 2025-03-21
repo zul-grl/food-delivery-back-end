@@ -1,6 +1,5 @@
 import { Router } from "express";
 import {
-  createUser,
   deleteUser,
   getUsers,
   updateUser,
@@ -9,9 +8,8 @@ import {
 const userRoute = Router();
 
 userRoute
-  .post("/", createUser)
-  .get("/", getUsers)
-  .delete("/", deleteUser)
-  .put("/", updateUser);
+  .get("/:userId", getUsers)
+  .delete("/:userId", deleteUser)
+  .patch("/:userId", updateUser);
 
 export { userRoute };

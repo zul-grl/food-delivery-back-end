@@ -10,8 +10,8 @@ import { foodOrderRoute } from "./routes/food-order.route";
 import { userRoute } from "./routes/user.route";
 
 const app = express();
-const port = 4000;
-app.use(cors({ origin: "http://localhost:3000" }));
+const port = process.env.PORT;
+app.use(cors());
 app.use(bodyParser.json());
 configDotenv();
 connectMongodb();
@@ -21,7 +21,6 @@ app.use("/food", foodRoute);
 app.use("/food-category", foodCategoryRoute);
 app.use("/food-order", foodOrderRoute);
 app.use("/user", userRoute);
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

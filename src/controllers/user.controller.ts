@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UserModel from "../models/user.model";
+import userModel from "../models/user.model";
 
 export const createUser = async (req: Request, res: Response) => {
   try {
@@ -13,8 +14,9 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await UserModel.find();
-    res.status(200).json({ message: "All users", allUsers });
+    const { userId } = req.params;
+    const user = await UserModel.findById(userId);
+    res.status(200).json({ message: "User", user });
   } catch (error) {
     res.status(500).json({ message: "Error in getUsers", error });
   }
@@ -30,15 +32,20 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const updateUser = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const { _id, email, password, phoneNumber, address, role, isVerified } =
-      req.body;
-    const updatedUser = await UserModel.updateOne(
-      { _id: _id },
-      { email, password, phoneNumber, address, role, isVerified }
-    );
-    res.status(200).json({ message: "Updated user", updatedUser });
+    const { userId } = req.params;
+    const updatedUser = await userModel.findByIdAndUpdate(userId, req.body, {
+      new: true,
+    });
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json({ message: "User updated", updatedUser });
   } catch (error) {
     res.status(500).json({ message: "Error in updateUser", error });
   }

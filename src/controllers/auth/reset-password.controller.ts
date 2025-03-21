@@ -1,28 +1,29 @@
 import { Request, Response } from "express";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import userModel from "../../models/user.model";
-
-export const resetPasswordRequest = async (req: Request, res: Response) => {
-  try {
-    const { email } = req.body;
-    const user = await userModel.findOne({ email });
-    if (!user) {
-      res.status(400).json({ message: "User not found" });
-      return;
-    }
-    res.status(200).json({ message: "Reset request received" });
-  } catch (error) {
-    res.status(500).json({ message: "Error in reset password request", error });
-  }
-};
+import { hashSync } from "bcryptjs";
 
 export const resetPassword = async (req: Request, res: Response) => {
+  const jwtSecret = process.env.JWT_SECRET;
   try {
-    const { userId, newPassword } = req.body;
+    const { password, token } = req.body;
 
-    await userModel.findByIdAndUpdate(userId, { password: newPassword });
+    if (!token) {
+      res.status(400).json({ message: "Token bhgui bna" });
+      return;
+    }
 
-    res.status(200).json({ message: "Password reset successfully" });
+    const decoded = jwt.verify(token, jwtSecret!) as JwtPayload;
+    const id = decoded.id;
+    const hashedPassword = hashSync(password, 10);
+
+    const user = await userModel.findByIdAndUpdate(id, {
+      password: hashedPassword,
+    });
+    res
+      .status(200)
+      .json({ message: "Tanii password amjilttai soligdlo", data: user });
   } catch (error) {
-    res.status(500).json({ message: "Error resetting password", error });
+    res.status(500).json({ message: "Aldaa garlaa", error });
   }
 };

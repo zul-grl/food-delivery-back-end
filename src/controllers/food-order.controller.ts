@@ -14,7 +14,7 @@ export const getFoodOrders = async (req: Request, res: Response) => {
   try {
     const orders = await FoodOrderModel.find()
       .populate("user")
-      .populate("foodOrderItems");
+      .populate("foodOrderItems.food");
     res.status(200).json({ message: "All orders", orders });
   } catch (error) {
     res.status(500).json({ message: "Error in getFoodOrders", error });
@@ -24,9 +24,9 @@ export const getFoodOrders = async (req: Request, res: Response) => {
 export const getFoodOrdersByUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const orders = await FoodOrderModel.find({ user: userId }).populate(
-      "foodOrderItems"
-    );
+    const orders = await FoodOrderModel.find({ user: userId })
+      .populate("user")
+      .populate("foodOrderItems.food");
     res.status(200).json({ message: "User orders", orders });
   } catch (error) {
     res.status(500).json({ message: "Error in getFoodOrdersByUser", error });
@@ -44,6 +44,22 @@ export const updateFoodOrder = async (
       req.body,
       { new: true }
     );
+    if (!updatedOrder) {
+      res.status(404).json({ message: "Order not found" });
+      return;
+    }
+    res.status(200).json({ message: "Order updated", updatedOrder });
+  } catch (error) {
+    res.status(500).json({ message: "Error in updateFoodOrder", error });
+  }
+};
+
+export const deleteFoodOrder = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const updatedOrder = await FoodOrderModel.deleteMany();
     if (!updatedOrder) {
       res.status(404).json({ message: "Order not found" });
       return;

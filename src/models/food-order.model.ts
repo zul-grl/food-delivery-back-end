@@ -15,10 +15,17 @@ const FoodOrderSchema: Schema = new Schema(
     totalPrice: { type: Number, required: true },
     status: {
       type: String,
-      enum: ["PENDING", "CANCELED", "DELIVERED"],
-      default: "PENDING",
+      enum: ["pending", "canceled", "delivered"],
+      default: "pending",
     },
-    foodOrderItems: [{ type: Schema.Types.ObjectId, ref: "FoodOrderItem" }],
+    foodOrderItems: {
+      type: [
+        {
+          food: { type: Schema.Types.ObjectId, ref: "Food", required: true },
+          quantity: { type: Number, required: true },
+        },
+      ],
+    },
   },
   { timestamps: true }
 );

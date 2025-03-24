@@ -26,7 +26,7 @@ export const sendEmail = async (email: string, token: string) => {
         You have requested to reset your password.
       </p>
       <div style="text-align: center;">
-        <a href="https://food-delivery-back-end-0cz4.onrender.com/auth/change-password?id=${token}" 
+        <a href="https://food-delivery-roan-mu.vercel.app/auth/change-password?id=${token}" 
            style="display: inline-block; padding: 12px 24px; background-color: #007BFF; color: #fff; text-decoration: none; border-radius: 4px; font-size: 16px;">
           Reset Password
         </a>

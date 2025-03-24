@@ -23,7 +23,7 @@ export const sendEmail = async (email: string, token: string) => {
         Your Password Reset Link
       </h1>
       <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
-        You have requested to reset your password. Please click the button below to proceed:
+        You have requested to reset your password.
       </p>
       <div style="text-align: center;">
         <a href="https://food-delivery-back-end-0cz4.onrender.com/auth/change-password?id=${token}" 
@@ -31,9 +31,6 @@ export const sendEmail = async (email: string, token: string) => {
           Reset Password
         </a>
       </div>
-      <p style="font-size: 14px; color: #777; margin-top: 20px; text-align: center;">
-        If you did not request this, please ignore this email.
-      </p>
     </div>
   `,
   };
